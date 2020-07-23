@@ -1,0 +1,29 @@
+When to Use the Serial Collector
+Serial Collector - это коллектор выбора для большинства приложений, которые выполняются на машинах клиентского типа и которые не требуют малого времени паузы. На современном оборудовании последовательный коллектор может эффективно управляет множеством нетривиальных приложений с 64MB кучами и относительно короткими наихудшими паузами - менее половины секунды для полного сбора.
+
+Serial Collector Selection
+В выпуске J2SE 5.0 serial collector автоматически выбирается в качестве сборщика мусора по умолчанию на машинах not server-class, как описано в разделе 5. На других машинах serial collector может быть явно запрошен с помощью параметра командной строки -XX:+UseSerialGC.
+
+***
+
+When to Use the Parallel Collector
+Приложения, которые могут извлечь выгоду из параллельного сборщика - это те, которые работают на машинах с более чем одним процессором и не имеют ограничений по времени паузы, так как нечастые, но потенциально длинные old generation collections все равно будут происходить. Примеры приложений, для которых параллельный сборщик часто подходит, включают те, которые выполняют пакетную обработку, выставление счетов, расчет заработной платы, научные вычисления и т. д. Возможно, вы захотите рассмотреть возможность выбора parallel compacting collector вместо parallel collector, поскольку первый выполняет parallel collections of all generations, not just the young generation.
+
+Parallel Collector Selection
+In the J2SE 5.0 release, the parallel collector is automatically chosen as the default garbage collector on server-class machines. On other machines, the parallel collector can be explicitly requested by using the -XX:+UseParallelGC command line option.
+
+***
+
+When to Use the Parallel Compacting Collector
+As with the parallel collector, the parallel compacting collector is полезен for applications that are run on machines with more than one CPU. Кроме того, the parallel operation of old generation collections сокращает pause times and makes the parallel compacting collector more подходящим than the parallel collector for applications that have pause time constraints. The parallel compacting collector might not be подходящим for applications run on large shared machines (such as SunRays), где ни одно приложение не должно монополизировать несколько процессоров в течение длительного периода времени. On таких machines, consider либо decreasing the number of threads used for garbage collection (via the –XX:ParallelGCThreads=n command line option) or selecting a different collector.
+
+Parallel Compacting Collector Selection
+If you want the parallel compacting collector to be used, you must select it by specifying the command line option -XX:+UseParallelOldGC.
+
+***
+
+When to Use the CMS Collector
+Use the CMS collector if your application needs shorter garbage collection pauses and can позволить себе to share processor resources with the garbage collector when the application is running. (Due to its concurrency, the CMS collector takes CPU cycles из приложения during a collection cycle.) Typically, applications that have a relatively large set of long-lived data (a large old generation), and that run on machines with two or more processors, как правило to benefit from the use of this collector. An example would be web servers. The CMS collector should be considered for any application with a low pause time requirement. It may also give good results for interactive applications with old generations of a небольшого size on a single processor.
+
+CMS Collector Selection
+If you want the CMS collector to be used, you must явно select it by specifying the command line option -XX:+UseConcMarkSweepGC. If you want it to be run in incremental mode, also enable that mode via the –XX:+CMSIncrementalMode option.
