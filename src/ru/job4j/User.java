@@ -13,6 +13,6 @@ public class User {
     @Override
     protected void finalize() throws Throwable {
         super.finalize();
-        System.out.println("finalize № " + ++countFinalization);
+        System.out.print("f" + ++countFinalization);
     }
 }
