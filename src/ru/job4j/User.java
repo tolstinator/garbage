@@ -8,11 +8,18 @@ public class User {
 
     private final boolean field2 = true;
 
-    private final String field3 = "string";
+    private String field3 = "string";
+
+    public User() {
+    }
+
+    public User(String field3) {
+        this.field3 = field3;
+    }
 
     @Override
     protected void finalize() throws Throwable {
         super.finalize();
-        System.out.print("f" + ++countFinalization);
+        System.out.println("f: " + this.field3);
     }
 }

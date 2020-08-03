@@ -1,16 +1,18 @@
 package ru.job4j;
 
+import java.lang.ref.SoftReference;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Gc {
     public static void main(String[] args) {
-        List<User> users1 = new ArrayList<>();
-        for (int i = 0; i < 100000; i++) {
-            users1.add(new User());
-//            if (i == (i / 100) * 100) {
-                System.out.println("to users1 added object № " + i);
-//            }
-        }
+        User user1 = new User("user1");
+        User user2 = new User("user2");
+        WeakReference<User> userWeak = new WeakReference<>(new User("user3"));
+        SoftReference<User> userSoft = new SoftReference<>(user2);
+        System.gc();
+        System.out.println(userWeak);
+        System.out.println(userSoft);
      }
 }
